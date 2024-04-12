@@ -29,3 +29,5 @@ const transferFunds = async (fromAccId,toAccId, amount) => {
         return false;
     }
 }
+
+export default transferFunds;
