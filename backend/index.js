@@ -8,7 +8,7 @@ const mongoose = require("mongoose");
 
 const PORT = process.env.PORT || 5000;
 // const router = express.Router();
-const Uri = "mongodb://localhost:27017/paytm";
+const Uri = "mongodb://pramod-pc:27017,pramod-pc:27018,pramod-pc:27019?replicaSet=rs";
 
 mongoose.connect(Uri);
 //cors

@@ -29,16 +29,12 @@ const transferSchema = zod.object({
 });
 
 accountRouter.post("/transfer", async (req, res) => {
-    const { success, to, amount } = transferSchema.safeParse(req.body);
+    const { success } = transferSchema.safeParse(req.body);
     if (!success) {
         return res.status(400).json({ message: "Invalid request" });
     }
     const userId = req.userId;
-    const transfered = await transferFunds(userId, to, amount);
-    if (!transfered) {
-        return res.status(400).json({ message: "Transfer failed" });
-    }
-    return res.json({ message: "Transfer successful" });
+    return await transferFunds(res, userId, req.body.to, req.body.amount);
 });
 
 module.exports = accountRouter;

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Account = require("../models/accountModel");
 
-const transferFunds = async (fromAccId, toAccId, amount) => {
+const transferFunds = async (res, fromAccId, toAccId, amount) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
@@ -11,27 +11,33 @@ const transferFunds = async (fromAccId, toAccId, amount) => {
         const toAccount = await Account.findOne({
             userId: toAccId,
         }).session(session);
-        console.log("inside the try");
+
         if (!fromAccount || !toAccount) {
-            return res.status(400).json({ message: "Account not found" });
+            throw new Error("Account not found");
         }
         if (fromAccount.balance < amount) {
-            return res.status(400).json({ message: "Insufficient funds" });
+            throw new Error("Insufficient balance");
         }
+
+        //update the amounts
         fromAccount.balance -= amount;
         toAccount.balance += amount;
-        await fromAccount.save(opts);
-        await toAccount.save(opts);
+
+        await fromAccount.save();
+        await toAccount.save();
+
         await session.commitTransaction();
         session.endSession();
-        // return res.json({ message: 'Transfer successful' });
-        return true;
+        return res.status(200).json({ message: " Transfered successfully" });
     } catch (error) {
-        console.log(error);
         await session.abortTransaction();
         session.endSession();
-        // return res.status(500).json({ message: 'Transfer failed' });
-        return false;
+        return res.status(500).json({
+            error: error.message,
+            message: "Transfer failed",
+        });
+        // return false;
+    } finally {
     }
 };
 
