@@ -103,12 +103,13 @@ userRouter.put("/update", authenticate, async (req, res) => {
     res.json({ message: "User updated successfully" });
 });
 
-userRouter.get("/user/bulk", authenticate, async (req, res) => {
+userRouter.get("/bulk", authenticate, async (req, res) => {
     const filter = req.query.filter || "";
-
+console.log(filter);
     const users = await User.find({
         $or: [{ firstName: { $regex: filter } }, { lastName: { $regex: filter } }],
     });
+    console.log(users);
     res.json({
         users: users.map((user) => {
             return {
