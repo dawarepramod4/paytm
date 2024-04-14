@@ -1,11 +1,11 @@
 import React from "react";
 
-const TextInputBox = ({ type, placeholder, value, onChange }) => {
+const TextInputBox = ({ type, label, placeholder, value, onChange }) => {
     return (
         <>
             <div className="my-3">
                 <label className="block text-gray-700 text-sm py-2 font-bold text-left">
-                    {placeholder}
+                    {label ?? placeholder}
                 </label>
                 <input
                     type={type}
