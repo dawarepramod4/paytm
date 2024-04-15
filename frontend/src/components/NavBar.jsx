@@ -1,6 +1,6 @@
 import React from "react";
 
-const NavBar = () => {
+const NavBar = ({name}) => {
     return (
         <div className=" border-b  py-2 px-2 flex justify-between items-center">
             <div>
@@ -8,7 +8,7 @@ const NavBar = () => {
             </div>
             <div>
                 <div className=" space-x-5 flex align-middle items-center">
-                  <div className="text-lg text-center align-middle inline-block ">Hello User</div>
+                  <div className="text-lg text-center align-middle inline-block ">Hello {name}</div>
                   <div className="rounded-full w-10 h-10 bg-black align-middle"></div>
                 </div>
             </div>

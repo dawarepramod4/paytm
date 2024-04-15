@@ -1,10 +1,6 @@
-// import router from "express";
 const router = require("express");
-// import User from "../models/userModel";
 const User = require("../models/userModel");
-// import authenticate from "../middleware";
 const authenticate = require("../middleware");
-// import Account from "../models/accountModel";
 const Account = require("../models/accountModel");
 const z = require("zod");
 
@@ -105,12 +101,13 @@ userRouter.put("/update", authenticate, async (req, res) => {
 
 userRouter.get("/bulk", authenticate, async (req, res) => {
     const filter = req.query.filter || "";
-console.log(filter);
     const users = await User.find({
         $or: [{ firstName: { $regex: filter } }, { lastName: { $regex: filter } }],
-    });
-    console.log(users);
-    res.json({
+    })
+        .where("_id")
+        .ne(req.userId);
+
+    return res.json({
         users: users.map((user) => {
             return {
                 firstName: user.firstName,
@@ -119,6 +116,23 @@ console.log(filter);
                 _id: user._id,
             };
         }),
+    });
+});
+
+userRouter.get("/me", authenticate, async (req, res) => {
+    const user = await User.findOne({
+        _id: req.userId,
+    });
+
+    const account = await Account.findOne({ userId: req.userId });
+    if (user === null || account === null) {
+        return res.status(400).json({ message: "User not found" });
+    }
+    return res.json({
+        name: user.firstName + " " + user.lastName,
+        userName: user.userName,
+        balance: Number(account.balance.toFixed(3)),
+        _id: user._id,
     });
 });
 
