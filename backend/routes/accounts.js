@@ -1,19 +1,12 @@
-// import router from "express";
-const router = require("express"); // 1
-// import Account from "../models/accountModel";
-const Account = require("../models/accountModel"); // 2
-// import authenticate from "../middleware";
-// const authenticate = require("../middleware").default; // 3
-// import zod from "zod";
-const zod = require("zod"); // 4
-// import transferFunds from "../controllers/account";
-const transferFunds = require("../controllers/account"); // 5
+const router = require("express"); 
+const Account = require("../models/accountModel"); 
+const zod = require("zod"); 
+const transferFunds = require("../controllers/account"); 
 
 const accountRouter = router.Router();
 
 accountRouter.get("/balance", async (req, res) => {
     const userId = req.userId;
-    console.log(userId);
     const accounts = await Account.findOne({ userId: userId });
     if (accounts === null) {
         return res.status(400).json({ message: "Account not found!" });
